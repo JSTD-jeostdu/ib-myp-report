@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MYP 성적 변환 · 성적표 발급</title>
+  <meta name="description" content="국가교육과정 평가 점수를 IB MYP Criterion 점수와 1~7 등급으로 변환하고 성적표를 인쇄합니다.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="css/style.css?v=1.0.0">
+</head>
+<body>
+  <header class="app-header no-print">
+    <div class="brand">
+      <span class="brand-mark">MYP</span>
+      <div>
+        <h1>MYP 성적 변환 · 성적표 발급</h1>
+        <p>국가교육과정 평가 점수 → Criterion A~D → 최종 등급(1~7)</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn ghost" data-act="sample">예시 데이터</button>
+      <label class="btn ghost file-btn">불러오기<input type="file" id="fileInput" accept=".json,application/json" hidden></label>
+      <button type="button" class="btn ghost" data-act="save">파일로 저장</button>
+      <button type="button" class="btn ghost" data-act="reset">새로 시작</button>
+      <button type="button" class="btn primary" data-act="guide">가이드</button>
+    </div>
+  </header>
+
+  <div class="notice no-print" role="note">
+    <strong>개인정보 안내</strong>
+    입력한 내용은 이 브라우저 안에만 있고 서버로 보내지 않습니다. 새로고침하거나 창을 닫으면 사라지니, 작업 중간에 <b>파일로 저장</b>해 두세요.
+  </div>
+
+  <nav class="stepper no-print" aria-label="작업 단계">
+    <button type="button" class="step" data-step="1"><span>1</span>과목·유닛 설정</button>
+    <button type="button" class="step" data-step="2"><span>2</span>점수 입력</button>
+    <button type="button" class="step" data-step="3"><span>3</span>성적표 출력</button>
+  </nav>
+
+  <main class="app-main">
+    <section id="step1" class="panel no-print" hidden></section>
+    <section id="step2" class="panel no-print" hidden></section>
+    <section id="step3" class="panel" hidden>
+      <div id="reportOptions" class="no-print"></div>
+      <div id="reportPreview" class="report-preview"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer no-print">made by 정우쌤</footer>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+  <div id="toast" class="toast no-print" role="status" hidden></div>
+
+  <dialog id="guide" class="guide no-print">
+    <div class="guide-head">
+      <h2>IB MYP 평가 가이드</h2>
+      <button type="button" class="btn ghost" data-act="close-guide" aria-label="닫기">닫기</button>
+    </div>
+    <div class="guide-body">
+      <h3>이 앱에서 하는 일</h3>
+      <ol>
+        <li><b>과목·유닛 설정</b>: 과목을 고르고, 유닛마다 어떤 기준(A~D)을 평가했는지와 점수 입력 방식을 정합니다.</li>
+        <li><b>점수 입력</b>: 학생 명단을 붙여넣고 유닛별 점수를 입력합니다. 원점수나 성취도(A~E)는 자동으로 0~8 수준으로 바뀝니다.</li>
+        <li><b>성적표 출력</b>: 최종 수준과 등급을 확인하고 인쇄하거나 PDF로 저장합니다.</li>
+      </ol>
+
+      <h3>Criterion(평가 기준)이란?</h3>
+      <p>MYP는 과목마다 A, B, C, D 네 가지 평가 기준이 있고, 각 기준을 <b>0~8 수준</b>으로 평가합니다. 한 기준에 대한 점수는 학기 동안 여러 유닛에서 모은 근거를 바탕으로 정합니다.</p>
+      <div id="guideCriteria"></div>
+
+      <h3>수준(0~8) 구간의 의미</h3>
+      <div id="guideBands"></div>
+
+      <h3>최종 수준 정하기</h3>
+      <p>IB는 단순 평균보다 학기 말 학생의 성취를 가장 잘 나타내는 수준을 교사가 판단하도록 권장합니다(best-fit). 앱은 설정한 방식(평균·최근 유닛·최고 수준)으로 <b>자동 제안값</b>을 계산하고, 점수 입력의 <b>종합</b> 탭에서 교사가 직접 조정할 수 있습니다.</p>
+
+      <h3>최종 등급(1~7)</h3>
+      <p>네 기준의 최종 수준을 더한 총점(최대 32점)을 등급 경계표에 맞춰 1~7 등급으로 바꿉니다.</p>
+      <div id="guideGrades"></div>
+
+      <h3>PDF로 저장하기</h3>
+      <p>성적표 출력 단계에서 <b>인쇄 / PDF 저장</b>을 누른 뒤, 인쇄 창의 대상(프린터)을 <b>PDF로 저장</b>으로 바꾸면 됩니다. 용지는 A4, 여백은 기본값을 권장하며 <b>배경 그래픽</b>을 켜면 색이 함께 인쇄됩니다.</p>
+    </div>
+  </dialog>
+
+  <script src="js/myp-data.js?v=1.0.0"></script>
+  <script src="js/app.js?v=1.0.0"></script>
+</body>
+</html>
