@@ -1,5 +1,6 @@
 # MYP 성적 변환 · 성적표 발급 웹앱
 
+n**접속 주소:** https://jstd-jeostdu.github.io/ib-myp-report/
 국가교육과정 평가 점수를 IB MYP 평가 기준(Criterion A~D, 0~8) 수준과 최종 등급(1~7)으로 바꾸고, 학생별 성적표를 인쇄하거나 PDF로 저장하는 웹앱입니다. 요구사항은 [PRD.txt](PRD.txt)에 있습니다.
 
 ## 구조
