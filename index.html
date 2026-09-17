@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MYP 성적 변환 · 성적표 발급</title>
-  <meta name="description" content="국가교육과정 평가 점수를 IB MYP Criterion 점수와 1~7 등급으로 변환하고 성적표를 인쇄합니다.">
+  <meta name="description" content="나이스 성적 파일과 기준 템플릿으로 IB MYP Criterion 수준과 1~7 등급을 계산하고, 학생별 전 과목 성적표를 인쇄합니다.">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="css/style.css?v=1.0.0">
+  <link rel="stylesheet" href="css/style.css?v=2.4.0">
 </head>
 <body>
   <header class="app-header no-print">
@@ -14,11 +14,11 @@
       <span class="brand-mark">MYP</span>
       <div>
         <h1>MYP 성적 변환 · 성적표 발급</h1>
-        <p>국가교육과정 평가 점수 → Criterion A~D → 최종 등급(1~7)</p>
+        <p>나이스 성적 파일 → Criterion A~D → 최종 등급(1~7) → 학생별 성적표</p>
       </div>
     </div>
     <div class="header-actions">
-      <button type="button" class="btn ghost" data-act="sample">예시 데이터</button>
+      <button type="button" class="btn demo-btn" data-act="demo">완성본 예시</button>
       <label class="btn ghost file-btn">불러오기<input type="file" id="fileInput" accept=".json,application/json" hidden></label>
       <button type="button" class="btn ghost" data-act="save">파일로 저장</button>
       <button type="button" class="btn ghost" data-act="reset">새로 시작</button>
@@ -28,19 +28,26 @@
 
   <div class="notice no-print" role="note">
     <strong>개인정보 안내</strong>
-    입력한 내용은 이 브라우저 안에만 있고 서버로 보내지 않습니다. 새로고침하거나 창을 닫으면 사라지니, 작업 중간에 <b>파일로 저장</b>해 두세요.
+    올린 파일은 이 브라우저 안에서만 읽고 서버로 보내지 않습니다. 새로고침하거나 창을 닫으면 사라지니, 작업 중간에 <b>파일로 저장</b>해 두세요. 저장한 파일에는 학생 이름과 성적이 들어 있습니다.
+  </div>
+
+  <div id="demoBanner" class="notice demo no-print" role="note" hidden>
+    <strong>완성본 예시</strong>
+    가상의 3학년 2개 반, 11과목 데이터입니다. 1~3단계에서 템플릿·나이스 파일·검토 과정도 볼 수 있습니다. 실제 파일을 올리거나 <b>새로 시작</b>을 누르면 예시가 지워집니다.
   </div>
 
   <nav class="stepper no-print" aria-label="작업 단계">
-    <button type="button" class="step" data-step="1"><span>1</span>과목·유닛 설정</button>
-    <button type="button" class="step" data-step="2"><span>2</span>점수 입력</button>
-    <button type="button" class="step" data-step="3"><span>3</span>성적표 출력</button>
+    <button type="button" class="step" data-step="1"><span>1</span>기준 템플릿</button>
+    <button type="button" class="step" data-step="2"><span>2</span>나이스 성적 파일</button>
+    <button type="button" class="step" data-step="3"><span>3</span>검토 · 수정</button>
+    <button type="button" class="step" data-step="4"><span>4</span>성적표 출력</button>
   </nav>
 
   <main class="app-main">
     <section id="step1" class="panel no-print" hidden></section>
     <section id="step2" class="panel no-print" hidden></section>
-    <section id="step3" class="panel" hidden>
+    <section id="step3" class="panel no-print" hidden></section>
+    <section id="step4" class="panel" hidden>
       <div id="reportOptions" class="no-print"></div>
       <div id="reportPreview" class="report-preview"></div>
     </section>
@@ -53,37 +60,47 @@
 
   <dialog id="guide" class="guide no-print">
     <div class="guide-head">
-      <h2>IB MYP 평가 가이드</h2>
+      <h2>사용 가이드</h2>
       <button type="button" class="btn ghost" data-act="close-guide" aria-label="닫기">닫기</button>
     </div>
     <div class="guide-body">
-      <h3>이 앱에서 하는 일</h3>
+      <h3>작업 순서</h3>
       <ol>
-        <li><b>과목·유닛 설정</b>: 과목을 고르고, 유닛마다 어떤 기준(A~D)을 평가했는지와 점수 입력 방식을 정합니다.</li>
-        <li><b>점수 입력</b>: 학생 명단을 붙여넣고 유닛별 점수를 입력합니다. 원점수나 성취도(A~E)는 자동으로 0~8 수준으로 바뀝니다.</li>
-        <li><b>성적표 출력</b>: 최종 수준과 등급을 확인하고 인쇄하거나 PDF로 저장합니다.</li>
+        <li><b>기준 템플릿</b>: <b>빈 양식 내려받기</b>로 받은 엑셀에 과목과 변환 규칙을 적어 올립니다. 평가계획의 채점 기준표(배점 → MYP 성취 레벨)를 그대로 옮기면 됩니다. 학기 초에 한 번 만들어 두고 학기 말에 다시 씁니다.</li>
+        <li><b>나이스 성적 파일</b>: 나이스 <b>수행평가 강의실별 일람표</b>를 <b>XLS data</b>로 받아 올립니다. 과목·반마다 파일이 하나씩이며, 여러 파일을 한 번에 올릴 수 있습니다.</li>
+        <li><b>검토 · 수정</b>: 반별로 전 과목 등급을 확인합니다. 확인이 필요한 칸을 눌러 영역 점수와 Criterion 수준을 보고, 필요하면 수준을 직접 고칩니다.</li>
+        <li><b>성적표 출력</b>: 학생 1명당 전 과목 성적표 1부를 인쇄하거나 PDF로 저장합니다. 등급 설명, Criterion 이름, 등급 경계표, 교사 의견, 서명란을 골라 넣을 수 있습니다. 과목이 많아 2쪽 이상이 되면 쪽마다 위쪽에 학생 이름·학년·반·번호가 반복 인쇄됩니다. 교사 의견은 <b>교사 의견 작성 · 출력</b>을 켜면 입력 칸이 나타납니다.</li>
       </ol>
 
-      <h3>Criterion(평가 기준)이란?</h3>
-      <p>MYP는 과목마다 A, B, C, D 네 가지 평가 기준이 있고, 각 기준을 <b>0~8 수준</b>으로 평가합니다. 한 기준에 대한 점수는 학기 동안 여러 유닛에서 모은 근거를 바탕으로 정합니다.</p>
-      <div id="guideCriteria"></div>
+      <h3>점수가 수준으로 바뀌는 방법</h3>
+      <p>나이스 영역 점수를 템플릿의 배점 행에서 찾아 수준(0~8)을 정합니다. 수준이 "7~8"처럼 범위이면 설정에 따라 높은 쪽 또는 낮은 쪽을 씁니다.</p>
+      <p>한 영역을 여러 Criterion으로 나누어 채점한 경우(예: B 10점 + D 15점) 나이스에는 <b>합계만</b> 있습니다. 앱은 합계가 되는 배점 조합 중 <b>기준별 점수 차가 가장 작은 조합</b>을 고르고 <b>추정</b>으로 표시합니다. 예: 23점 → B 10 + D 13, 21점 → B 10 + D 11. 조합이 하나뿐이면(예: 25점 만점) 추정 표시가 없습니다.</p>
+      <p>같은 Criterion을 여러 영역에서 평가했다면 과목마다 정한 방식(일관된 수준·최근·최고·평균)으로 <b>제안값</b>을 냅니다. IB는 학기 말 수준을 교사가 근거의 흐름(향상 추세)과 일관성을 보고 전문적으로 판단(best-fit)하도록 하고, 학기 점수를 단순 평균해 성적을 내는 것은 부적절한 방식으로 봅니다. 3단계에서 제안값을 확인하고 필요하면 고치세요.</p>
+      <p>여러 교사가 같은 과목을 가르치면 최종 수준을 정하기 전에 <b>내부 표준화(internal standardization)</b>, 즉 채점 기준을 함께 맞춰 보는 협의가 필요합니다.</p>
 
       <h3>수준(0~8) 구간의 의미</h3>
       <div id="guideBands"></div>
 
-      <h3>최종 수준 정하기</h3>
-      <p>IB는 단순 평균보다 학기 말 학생의 성취를 가장 잘 나타내는 수준을 교사가 판단하도록 권장합니다(best-fit). 앱은 설정한 방식(평균·최근 유닛·최고 수준)으로 <b>자동 제안값</b>을 계산하고, 점수 입력의 <b>종합</b> 탭에서 교사가 직접 조정할 수 있습니다.</p>
-
       <h3>최종 등급(1~7)</h3>
-      <p>네 기준의 최종 수준을 더한 총점(최대 32점)을 등급 경계표에 맞춰 1~7 등급으로 바꿉니다.</p>
+      <p>기준별 수준을 더한 총점(최대 32점)을 등급 경계표에 맞춰 1~7 등급으로 바꿉니다. IB는 등급을 <b>그 과목의 모든 Criterion 수준</b>으로 정하도록 하므로, 이번 학기에 평가하지 않은 Criterion이 있는 과목은 기본적으로 등급 없이 수준만 보고합니다. 학교 방침으로 환산 등급을 쓰려면 1단계 설정에서 켤 수 있습니다. 성적표에는 등급과 함께 Criterion별 수준이 반드시 들어가야 합니다.</p>
       <div id="guideGrades"></div>
+
+      <h3>추가 기록: ATL 기능 · 학습자상 · 공동체 프로젝트</h3>
+      <p>3단계 <b>추가 기록</b>에서 켜면 "보기" 목록에 입력 화면이 생기고 성적표에도 나옵니다. 모두 선택 기능입니다.</p>
+      <ul>
+        <li><b>ATL(학습 접근 방법) 기능</b>: IB는 점수로 평가하지 않고 발달 단계(초보자·학습자·실천가·전문가)로 피드백합니다. 5개 기능 범주 또는 10개 기능 군집 단위로 입력하며, 일괄 입력과 엑셀 붙여넣기를 쓸 수 있습니다.</li>
+        <li><b>학습자상</b>: 10가지 특성 중 이번 학기에 두드러진 것을 고르고 필요하면 메모를 남깁니다. 점수로 평가하지 않습니다.</li>
+        <li><b>공동체 프로젝트</b>: 3학년(MYP 3년차)만 입력합니다. 제목, 지도 교사, 기준별 수준(0~8)을 적고, 1~7 등급은 필요할 때만 켭니다. 평가 기준 체계(3개 또는 4개 기준)는 학교에서 쓰는 IB 프로젝트 가이드에 맞게 고르세요.</li>
+      </ul>
 
       <h3>PDF로 저장하기</h3>
       <p>성적표 출력 단계에서 <b>인쇄 / PDF 저장</b>을 누른 뒤, 인쇄 창의 대상(프린터)을 <b>PDF로 저장</b>으로 바꾸면 됩니다. 용지는 A4, 여백은 기본값을 권장하며 <b>배경 그래픽</b>을 켜면 색이 함께 인쇄됩니다.</p>
     </div>
   </dialog>
 
-  <script src="js/myp-data.js?v=1.0.0"></script>
-  <script src="js/app.js?v=1.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="js/myp-data.js?v=2.4.0"></script>
+  <script src="js/demo-data.js?v=2.4.0"></script>
+  <script src="js/app.js?v=2.4.0"></script>
 </body>
 </html>

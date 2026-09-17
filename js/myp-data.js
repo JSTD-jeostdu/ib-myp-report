@@ -86,6 +86,64 @@ window.MYP = {
   },
 
   // 기준별 성취 수준(0~8) 구간 설명
+  // ATL(학습 접근 방법) 기능: 5개 범주, 10개 군집 (IB, MYP: From principles into practice)
+  // IB는 ATL 기능을 공식 평가하지 않으며, 발달 단계(초보자~전문가)로 피드백한다.
+  atl: {
+    categories: [
+      { key: 'communication', ko: '의사소통 기능', en: 'Communication', clusters: [{ key: 'communication', ko: '의사소통', en: 'Communication' }] },
+      { key: 'social', ko: '대인관계 기능', en: 'Social', clusters: [{ key: 'collaboration', ko: '협업', en: 'Collaboration' }] },
+      { key: 'selfManagement', ko: '자기 관리 기능', en: 'Self-management', clusters: [
+        { key: 'organization', ko: '조직', en: 'Organization' },
+        { key: 'affective', ko: '정서', en: 'Affective' },
+        { key: 'reflection', ko: '성찰', en: 'Reflection' },
+      ] },
+      { key: 'research', ko: '조사 기능', en: 'Research', clusters: [
+        { key: 'information', ko: '정보 리터러시', en: 'Information literacy' },
+        { key: 'media', ko: '미디어 리터러시', en: 'Media literacy' },
+      ] },
+      { key: 'thinking', ko: '사고 기능', en: 'Thinking', clusters: [
+        { key: 'critical', ko: '비판적 사고', en: 'Critical thinking' },
+        { key: 'creative', ko: '창의적 사고', en: 'Creative thinking' },
+        { key: 'transfer', ko: '전이', en: 'Transfer' },
+      ] },
+    ],
+    stages: [
+      { key: 'N', ko: '초보자', en: 'Novice', short: '보고 배우는 단계', desc: '기능을 처음 접하고, 다른 사람이 하는 것을 보며 배웁니다 (관찰).' },
+      { key: 'L', ko: '학습자', en: 'Learner', short: '도움을 받아 따라 하는 단계', desc: '안내와 도움을 받아 다른 사람을 따라 기능을 씁니다 (모방).' },
+      { key: 'P', ko: '실천가', en: 'Practitioner', short: '스스로 자신 있게 쓰는 단계', desc: '기능을 자신 있고 효과적으로 씁니다 (시연).' },
+      { key: 'E', ko: '전문가', en: 'Expert', short: '다른 사람에게 보여 줄 수 있는 단계', desc: '다른 사람에게 기능 쓰는 법을 보여 주고, 그 효과를 정확히 평가합니다 (자기 조절).' },
+    ],
+  },
+
+  // IB 학습자상 10가지 (점수로 평가하지 않음)
+  learnerProfile: [
+    { key: 'inquirers', ko: '탐구하는 사람', short: '탐구', en: 'Inquirers', desc: '호기심을 키우고 스스로, 또 함께 탐구하며 배움을 즐깁니다.' },
+    { key: 'knowledgeable', ko: '지식이 풍부한 사람', short: '지식', en: 'Knowledgeable', desc: '여러 학문의 개념을 깊이 이해하고 지역과 세계의 문제에 연결합니다.' },
+    { key: 'thinkers', ko: '사고하는 사람', short: '사고', en: 'Thinkers', desc: '비판적·창의적으로 생각해 복잡한 문제를 분석하고 책임 있게 행동합니다.' },
+    { key: 'communicators', ko: '소통하는 사람', short: '소통', en: 'Communicators', desc: '여러 언어와 방식으로 자신 있게 표현하고 다른 관점에 귀 기울입니다.' },
+    { key: 'principled', ko: '원칙을 지키는 사람', short: '원칙', en: 'Principled', desc: '정직하고 공정하게 행동하며 자신의 행동에 책임집니다.' },
+    { key: 'openMinded', ko: '열린 마음을 지닌 사람', short: '열린 마음', en: 'Open-minded', desc: '자신과 다른 문화·가치·전통을 존중하고 다양한 관점을 살핍니다.' },
+    { key: 'caring', ko: '배려하는 사람', short: '배려', en: 'Caring', desc: '공감하고 존중하며 다른 사람과 세상에 긍정적인 변화를 만들려 합니다.' },
+    { key: 'riskTakers', ko: '도전하는 사람', short: '도전', en: 'Risk-takers', desc: '불확실한 상황에 용기 있게 맞서고 새로운 생각과 방법을 시도합니다.' },
+    { key: 'balanced', ko: '균형 잡힌 사람', short: '균형', en: 'Balanced', desc: '지적·신체적·정서적 균형을 소중히 여기며 자신과 다른 사람의 행복을 돌봅니다.' },
+    { key: 'reflective', ko: '성찰하는 사람', short: '성찰', en: 'Reflective', desc: '자신의 생각과 경험을 돌아보며 강점과 약점을 이해하고 성장합니다.' },
+  ],
+
+  // 공동체 프로젝트 평가 기준 (각 0~8). 가이드 판에 따라 기준 수가 달라 학교에서 고른다.
+  // 등급 경계는 학교에서 확인해 쓰는 참고값이다.
+  communityProject: {
+    three: {
+      label: '3개 기준: 계획하기 · 기능 적용하기 · 성찰하기',
+      criteria: { A: { ko: '계획하기', en: 'Planning' }, B: { ko: '기능 적용하기', en: 'Applying skills' }, C: { ko: '성찰하기', en: 'Reflecting' } },
+      boundaries: [1, 5, 8, 12, 15, 19, 22],
+    },
+    four: {
+      label: '4개 기준: 탐구하기 · 계획하기 · 실행하기 · 성찰하기',
+      criteria: { A: { ko: '탐구하기', en: 'Investigating' }, B: { ko: '계획하기', en: 'Planning' }, C: { ko: '실행하기', en: 'Taking action' }, D: { ko: '성찰하기', en: 'Reflecting' } },
+      boundaries: [1, 6, 10, 15, 19, 24, 28],
+    },
+  },
+
   levelBands: [
     { min: 0, max: 0, ko: '기준 미도달', en: 'Not achieved', desc: '어떤 수준 설명에도 도달하지 못함' },
     { min: 1, max: 2, ko: '제한적', en: 'Limited', desc: '기본 요소를 부분적으로만 보여 줌' },
@@ -97,14 +155,14 @@ window.MYP = {
   // 1~7 등급 경계(총점 32점 기준): 각 등급의 최소 총점
   defaultBoundaries: [1, 6, 10, 15, 19, 24, 28],
 
-  // 일반 등급 설명 (교사·학부모 안내용 요약)
+  // MYP 일반 등급 설명 (IB, MYP: From principles into practice의 general grade descriptors를 한국어로 옮김)
   gradeDescriptors: {
-    1: { en: 'Very limited', ko: '매우 제한적인 수준의 결과물을 보입니다. 핵심 개념과 내용에 대한 이해에 많은 오개념과 큰 격차가 있으며, 비판적·창의적 사고를 거의 보여 주지 못합니다.' },
-    2: { en: 'Limited', ko: '제한적인 수준의 결과물을 보입니다. 이해에 오개념이나 격차가 자주 나타나고, 익숙한 상황에서도 지식과 기능을 적용하는 데 어려움이 있습니다.' },
-    3: { en: 'Basic', ko: '기본적인 수준의 결과물을 보입니다. 기본 이해는 갖추었으나 일부 오개념과 격차가 있으며, 익숙한 상황에서 도움을 받아 지식과 기능을 적용합니다.' },
-    4: { en: 'Satisfactory', ko: '만족할 만한 수준의 결과물을 보입니다. 대체로 안정적으로 이해하고 있으며, 익숙한 상황에서 지식과 기능을 적용하고 기본적인 분석과 사고를 보여 줍니다.' },
-    5: { en: 'Good', ko: '좋은 수준의 결과물을 보입니다. 개념과 내용을 탄탄하게 이해하고, 익숙한 상황과 일부 새로운 상황에서 지식과 기능을 적용하며 때때로 통찰력 있는 사고를 보여 줍니다.' },
-    6: { en: 'Very good', ko: '매우 좋은 수준의 결과물을 보입니다. 폭넓고 정확하게 이해하고, 다양한 상황에서 지식과 기능을 적용하며, 대체로 독립적으로 비판적·창의적 사고를 보여 줍니다.' },
-    7: { en: 'Excellent', ko: '탁월한 수준의 결과물을 보입니다. 깊이 있고 정교하게 이해하며, 새롭고 복잡한 상황에서도 지식과 기능을 일관되게 적용하고, 독립적이고 통찰력 있는 사고를 보여 줍니다.' },
+    1: { ko: '매우 제한적인 수준의 결과물을 만듭니다. 대부분의 개념과 맥락에 대해 중대한 오해가 많거나 이해가 부족합니다. 비판적·창의적 사고를 거의 보여 주지 않습니다. 지식이나 기능을 거의 활용하지 못하며 매우 경직되어 있습니다.' },
+    2: { ko: '제한적인 수준의 결과물을 만듭니다. 많은 개념과 맥락에 대해 오해나 이해의 큰 공백이 드러납니다. 비판적·창의적 사고를 드물게 보여 줍니다. 지식과 기능을 대체로 경직되게 사용하며, 드물게 적용합니다.' },
+    3: { ko: '수용할 만한 수준의 결과물을 만듭니다. 많은 개념과 맥락에 대한 기초적인 이해를 전달하지만, 때때로 중대한 오해나 공백이 있습니다. 기초적인 비판적·창의적 사고를 보이기 시작합니다. 지식과 기능을 자주 경직되게 사용하며, 익숙한 수업 상황에서도 도움이 필요합니다.' },
+    4: { ko: '양호한 수준의 결과물을 만듭니다. 대부분의 개념과 맥락에 대한 기초적인 이해를 전달하며, 오해가 적고 공백이 작습니다. 기초적인 비판적·창의적 사고를 자주 보여 줍니다. 익숙한 수업 상황에서는 지식과 기능을 어느 정도 유연하게 사용하지만, 낯선 상황에서는 도움이 필요합니다.' },
+    5: { ko: '대체로 높은 수준의 결과물을 만듭니다. 개념과 맥락에 대한 확실한 이해를 전달합니다. 비판적·창의적 사고를 보여 주며, 때때로 정교합니다. 익숙한 수업 상황과 실생활 상황에서 지식과 기능을 사용하며, 도움을 받으면 일부 낯선 실생활 상황에서도 사용합니다.' },
+    6: { ko: '높은 수준이며 때때로 독창적인 결과물을 만듭니다. 개념과 맥락에 대한 폭넓은 이해를 전달합니다. 비판적·창의적 사고를 보여 주며, 자주 정교합니다. 익숙하거나 낯선 수업 상황과 실생활 상황에서 지식과 기능을 사용하며, 종종 독립적으로 해냅니다.' },
+    7: { ko: '높은 수준이며 자주 독창적인 결과물을 만듭니다. 개념과 맥락에 대한 포괄적이고 섬세한 이해를 전달합니다. 정교한 비판적·창의적 사고를 일관되게 보여 줍니다. 다양하고 복잡한 수업 상황과 실생활 상황에서 지식과 기능을 독립적이고 능숙하게 자주 전이합니다.' },
   },
 };
